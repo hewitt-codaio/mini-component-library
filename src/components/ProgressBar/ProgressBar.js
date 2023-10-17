@@ -7,16 +7,23 @@ import VisuallyHidden from '../VisuallyHidden';
 
 const ProgressBar = ({ value, size }) => {
   const Component = Sizes[size];
-  return <Component role='progressbar' aria-valuenow={value.toString()}><Mask><Indicator width={value}/></Mask></Component>;
+  return (
+    <Component role='progressbar' aria-valuenow={value.toString()}>
+      <Mask>
+        <VisuallyHidden>{value}%</VisuallyHidden>
+        <Bar width={value} />
+      </Mask>
+    </Component>
+  );
 };
 
 const Base = styled.div`
   background-color: ${COLORS.transparentGray15};
+  box-shadow: inset 0px 2px 4px ${COLORS.transparentGray35};
   overflow: hidden;
 `
 
 const Large = styled(Base)`
-  box-shadow: inset 0px 2px 4px ${COLORS.transparentGray35};
   height: 24px;
   border-radius: 8px;
   padding: 4px;
@@ -40,7 +47,7 @@ const Mask = styled.div`
   overflow: hidden;
 `
 
-const Indicator = styled.div`
+const Bar = styled.div`
   background-color: ${COLORS.primary};
   height: 100%;
   width: ${props => props.width}%;
