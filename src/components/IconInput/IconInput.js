@@ -9,20 +9,39 @@ import VisuallyHidden from '../VisuallyHidden';
 const IconInput = ({
   label,
   icon,
-  width,
+  width = 250,
   size,
-  placeholder,
+  ...delegated
 }) => {
   return (
-    <Wrapper size={size} width={width}>
-      <IconInputWrapper>
-        <IconWrapper size={size === 'small' ? 16 : 24} id={'search'}/>
-        <Input size={size} placeholder={placeholder}/>
-      </IconInputWrapper>
-      <Underline size={size} />
-    </Wrapper>
+      <Wrapper>
+        <VisuallyHidden>{label}</VisuallyHidden>
+        <IconWrapper size={size}>
+          <Icon id={icon} size={size === 'small' ? 16 : 24} />
+        </IconWrapper>
+        <Input size={size} width={width} {...delegated} />
+      </Wrapper>
   );
 };
+
+const Wrapper = styled.label`
+  display: block;
+  position: relative;
+  color: ${COLORS.gray700};
+  &:hover {
+    color: ${COLORS.black};
+  }
+`;
+
+// TODO: Really want to re-interpret size === 'small` as 16 pixels here instead of in top level class
+//       However, so far haven't figured out how to pass a prop down to the base class style
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: ${props => props.size === 'small' ? 16 : 24}px;
+  margin: auto 0;
+`;
 
 // ********************************************************************************************
 // TODO: Can't seem to get the input to take up the rest of the horizontal space after the icon
@@ -31,31 +50,21 @@ const IconInput = ({
 const Input = styled.input`
   width: auto;
   font: inherit;
-  border: none;
-  margin-left: 12px; 
-  margin-bottom: ${props => props.size === 'small' ? 4 : 7}px;
-  outline: 0;
-`
-
-const Wrapper = styled.div`
-  width: ${props => props.width ?? 271}px;
   font-size: ${props => props.size === 'small' ? 14 / 16 : 18 / 16}rem;
-  ${Input}:focus ~ & {
-    outline: 1px dotted #212121;
-    outline: 2px auto -webkit-focus-ring-color;
+  font-weight: 700;
+  padding-left: 36px; 
+  height: ${props => props.size === 'small' ? 24 / 16 : 36 / 16}rem;
+  color: inherit;
+  border: none;
+  border-bottom: ${props => props.size === 'small' ? 1 : 2}px solid ${COLORS.black};
+  outline-offset: 2px;
+  outline-width: ${props => props.size === 'small' ? 1 : 2}px;
+  width: ${props => props.width}px;
+  &::placeholder {
+    color: ${COLORS.gray500};
+    font-weight: 400;
   }
-`
-
-const IconInputWrapper = styled.div`
-`
-
-// TODO: Really want to re-interpret size === 'small` as 16 pixels here instead of in top level class
-//       However, so far haven't figured out how to pass a prop down to the base class style
-const IconWrapper = styled(Icon)`
-  display: inline-block;
-  margin: auto;
-  height: 100%;
-`
+`;
 
 const Underline = styled.div`
   width: 100%;
@@ -63,6 +72,6 @@ const Underline = styled.div`
   border-width: ${props => props.size === 'small' ? 0.5 : 1}px;
   border-radius: ${props => props.size === 'small' ? 0.5 : 1}px;
   border-color: black;
-`
+`;
 
 export default IconInput;
